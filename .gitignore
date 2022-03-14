@@ -1,2 +1,4 @@
 __pycache__/analysis.cpython-38.pyc
 __pycache__/word.cpython-38.pyc
+*.pyc
+*.pyo
