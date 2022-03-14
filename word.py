@@ -20,7 +20,7 @@ class Word:
             # self.tags = [x for x in self.dict_entry.split(" ") if ("[" in x)][0][1:-1]
 
 
-    def process(self, word): # this is one word
+    def process(self, word):
         print("WORD",word)
         for item in word:
             if(self.pos == "ADJ"): # different information for each part of speech
@@ -42,10 +42,35 @@ class Word:
         }
 
 class Noun(Word):
-    def process(self, word): # this is one word
+    def process(self, word):
         for item in word:
-            if(self.pos == "N"):
-                self.forms.append(item.split(" ")[4:7])
+            self.forms.append(item.split(" ")[4:7])
+        # case number gender
+
+class Adjective(Word):
+    def process(self, word):
+        for item in word:
+            self.forms.append(item.split(" ")[4:8])
+        # case number gender degree
+
+class Verb(Word):
+    def process(self, word):
+        for item in word:
+            self.forms.append(item.split(" ")[4:9])
+        # tense voice mood person number
+
+class Adverb(Word):
+    def process(self, word):
+        for item in word:
+            self.forms.append(item.split(" ")[2])
+        # degree
+
+class Preposition(Word):
+    def process(self, word):
+        for item in word:
+            self.forms.append(item.split(" ")[2])
+        # the thing that it takes
+        
 
             
 
