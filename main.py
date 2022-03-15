@@ -1,24 +1,11 @@
 import subprocess
 import sys
-import json
 import pprint
 import word
 import analysis
 
 words = sys.argv[1:]
 original = " ".join(words)
-
-
-# considering this structure to better analyze possibilities
-
-# forms = {
-#         "N": {},
-#         "V": {},
-#         "ADJ": {},
-#         "ADV": {},
-#         "PREP": {}
-# }
-
 
 # Clean binary string and then create analysis structure to access contents
 def clean(word):
@@ -29,14 +16,10 @@ def clean(word):
 
     return list
 
-def forms(word):
-    x = analysis.WordAnalysis(word)
+def analyze(word): # gives a word analysis of a singular word
+    x = analysis.WordAnalysis(clean(word))
     return x.toString()
-
 
 for word in words:
     proc = subprocess.check_output(f"bin/words {word}", shell=True)
-    # print(definition(clean(proc)))
-    pprint.pprint(forms(clean(proc)))
-    # print(cases(forms(clean(proc))))
-
+    pprint.pprint(analyze(proc)) # print word analysis cleanly

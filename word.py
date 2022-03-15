@@ -1,36 +1,10 @@
-from re import L
-
-
 class Word:
-
     def __init__(self):
         self.forms = []
         self.dict_entry = ""
         self.tags = ""
         self.definition = ""
         self.pos = ""
-
-        # while(not "[" in words[0]):
-        #     if(self.pos == "ADJ"): # different information for each part of speech
-        #         self.forms.append(words.pop(0).split(" ")[-4:])
-        #     if(self.pos == "N"):
-        #         self.forms.append(words.pop(0).split(" ")[-3:])
-            # self.dict_entry = words.pop(0)
-            # self.definition = words.pop(0)
-            # self.tags = [x for x in self.dict_entry.split(" ") if ("[" in x)][0][1:-1]
-
-
-    def process(self, word):
-        print("WORD",word)
-        for item in word:
-            if(self.pos == "ADJ"): # different information for each part of speech
-                self.forms.append(item.split(" ")[4:8])
-            if(self.pos == "N"):
-                self.forms.append(item.split(" ")[4:7])
-            if(self.pos == "V"):
-                self.forms.append(item.split(" ")[4:9])
-            if(self.pos == "PREP"):
-                self.forms.append(item.split(" ")[1:3])
 
     def toString(self):
         return {
@@ -42,35 +16,77 @@ class Word:
         }
 
 class Noun(Word):
+    def __init__(self):
+        Word.__init__(self)
+        self.case = []
+        self.number = []
+        self.gender = []
     def process(self, word):
         for item in word:
             self.forms.append(item.split(" ")[4:7])
         # case number gender
+        for form in self.forms:
+            self.case.append(form[0])
+            self.number.append(form[1])
+            self.gender.append(form[2])
 
 class Adjective(Word):
+    def __init__(self):
+        Word.__init__(self)
+        self.case = []
+        self.number = []
+        self.gender = []
+        self.degree = []
     def process(self, word):
         for item in word:
             self.forms.append(item.split(" ")[4:8])
         # case number gender degree
+        for form in self.forms:
+            self.case.append(self.forms[0])
+            self.number.append(self.forms[1])
+            self.gender.append(self.forms[2])
+            self.degree.append(self.forms[3])
 
 class Verb(Word):
+    def __init__(self):
+        Word.__init__(self)
+        
+        self.tense = []
+        self.voice = []
+        self.mood = []
+        self.person = []
+        self.number = []
     def process(self, word):
+        
         for item in word:
             self.forms.append(item.split(" ")[4:9])
         # tense voice mood person number
-
+        
+        for form in self.forms:
+            self.tense.append(self.forms[0])
+            self.voice.append(self.forms[1])
+            self.mood.append(self.forms[2])
+            self.person.append(self.forms[3])
+            self.number.append(self.forms[4])
+        
 class Adverb(Word):
+    def __init__(self):
+        Word.__init__(self)
+        self.degree = []
     def process(self, word):
         for item in word:
             self.forms.append(item.split(" ")[2])
         # degree
+        for form in self.forms:
+            self.degree.append(self.forms[0])
 
 class Preposition(Word):
+    def __init__(self):
+        Word.__init__(self)
+        self.plus = []
     def process(self, word):
         for item in word:
             self.forms.append(item.split(" ")[2])
         # the thing that it takes
-        
-
-            
-
+        for form in self.forms:
+            self.plus.append(self.forms[0])

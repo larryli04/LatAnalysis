@@ -20,6 +20,9 @@ class WordAnalysis():
                 currentWord = word.Verb()
             elif(pos == "PREP"):
                 currentWord = word.Preposition()
+            else:
+                print("A word was not identified, try again")
+                exit()
 
             chunk = []
 
@@ -40,12 +43,21 @@ class WordAnalysis():
     def append(self, word):
         self.words.append(word)
 
-    def allForms(self):
-        temp = []
-        for word in self.words:
-            temp.append(word.forms)
-        return temp
-
-
     def toString(self):
-        return [x.toString() for x in self.words]
+        return [x.toString() for x in self.words] # doesn't include every data point in object
+
+    def getVerbTenses(self): # common data point for deciding sentence structure
+        ans = []
+        for word in self.words:
+            print(word.pos)
+            if word.pos == "V":
+                ans.append(word.tense)
+        return ans
+    
+    def getNounCases(self): # common data point for deciding sentence structure
+        ans = []
+        for word in self.words:
+            print(word.pos)
+            if word.pos == "N":
+                ans.append(word.case)
+        return ans
