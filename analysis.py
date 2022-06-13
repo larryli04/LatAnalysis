@@ -1,15 +1,26 @@
 import word
+import pprint
 
 # WordAnalysis gives a structured breakdown of definition, forms, and other information
 
 class WordAnalysis():
-    def __init__(self, words):
+    def __init__(self, words, f):
         self.words = []
-
+        self.que = False
         #create a new word
+
+        if("TACKON" in words[0]): # if there is a -que, to remove it from the Whitaker output
+            words.pop(0)
+            words.pop(0)
+            self.que = True
+
+        
+        if(f == "debug"):
+                pprint.pprint(words)
         
         while(len(words) != 0): # this should just delineate the three parts of Whitaker output, not put it into the class
             pos = words[0].split(" ")[1]
+
             if(pos == "ADJ"):
                 currentWord = word.Adjective()
             elif(pos == "N"):
@@ -23,8 +34,10 @@ class WordAnalysis():
             else:
                 print("A word was not identified, try again")
                 exit()
-
             
+            if self.que == True:
+                currentWord.que = True
+
             chunk = []
 
             currentWord.pos = pos # this
@@ -33,7 +46,14 @@ class WordAnalysis():
                 chunk.append(words.pop(0))
                 continue
 
-            currentWord.dict_entry = words.pop(0) #maybe move these three into word.py
+            if(f == "debug"):
+                print("part of speech:", pos)
+                print("chunk:", chunk)
+
+            while(not ";" in words[0]): # takes the last dictionary entry
+                currentWord.dict_entry = words.pop(0)
+                continue
+            
             currentWord.definition = words.pop(0)
             currentWord.tags = [x for x in currentWord.dict_entry.split(" ") if ("[" in x)][0][1:-1]
 

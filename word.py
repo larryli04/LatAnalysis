@@ -5,6 +5,7 @@ class Word:
         self.tags = ""
         self.definition = ""
         self.pos = ""
+        self.que = False
 
     def toString(self):
         return {
@@ -12,7 +13,8 @@ class Word:
             "dict_entry": self.dict_entry,
             "tags": self.tags,
             "definition": self.definition,
-            "pos": self.pos
+            "pos": self.pos,
+            "que": self.que
         }
 
 class Noun(Word):
