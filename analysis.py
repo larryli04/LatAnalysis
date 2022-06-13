@@ -24,6 +24,7 @@ class WordAnalysis():
                 print("A word was not identified, try again")
                 exit()
 
+            
             chunk = []
 
             currentWord.pos = pos # this

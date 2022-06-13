@@ -59,7 +59,8 @@ class Verb(Word):
     def process(self, word):
         
         for item in word:
-            self.forms.append(item.split(" ")[4:9])
+            self.forms=item.split(" ")[4:9]
+
         # tense voice mood person number
         
         for form in self.forms:

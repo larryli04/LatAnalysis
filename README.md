@@ -1,12 +1,20 @@
 # LatAnalysis
  
+
+## NOTE
+
+- Remember to run `make` in `whitakers-words-master` directory
+  - this make take a while to generate the necessary files
+
 ## Use
 From working directory
 
 `./run.sh "LATIN_INPUT"`
 
 ## Dependencies Needed
+- make
 - gnat
+  - GPRBuild
 - python3
 - run from Linux system or WSL
 
