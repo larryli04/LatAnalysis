@@ -1,2 +1,2 @@
 cd whitakers-words-master
-python3 ../main.py $1 $2
+python3 ../getWhitakers.py $1 $2

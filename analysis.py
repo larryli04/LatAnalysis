@@ -4,7 +4,8 @@ import pprint
 # WordAnalysis gives a structured breakdown of definition, forms, and other information
 
 class WordAnalysis():
-    def __init__(self, words, f):
+    def __init__(self, name, words, f):
+        self.name = name
         self.words = []
         self.que = False
         #create a new word
@@ -35,6 +36,7 @@ class WordAnalysis():
                 print("A word was not identified, try again")
                 exit()
             
+            currentWord.name = self.name
             if self.que == True:
                 currentWord.que = True
 
