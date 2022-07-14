@@ -1,0 +1,65 @@
+am.o                 V      1 1 PRES ACTIVE  IND 1 S
+amo, amare, amavi, amatus  V (1st)   [XXXAO]
+love, like; fall in love with; be fond of; have a tendency to;
+
+bell.o               N      2 2 DAT S N
+bell.o               N      2 2 ABL S N
+bellum, belli  N (2nd) N   [XWXAO]
+war, warfare; battle, combat, fight; (at/in) (the) war(s); military force, arms
+bell.o               V      1 1 PRES ACTIVE  IND 1 S
+bello, bellare, bellavi, bellatus  V (1st) INTRANS   [XWXBO]
+fight, wage war, struggle; take part in war/battle/fight (also animals/games);
+bell.o               ADJ    1 1 DAT S M POS
+bell.o               ADJ    1 1 DAT S N POS
+bell.o               ADJ    1 1 ABL S M POS
+bell.o               ADJ    1 1 ABL S N POS
+bellus, bella -um, bellior -or -us, bellissimus -a -um  ADJ   [XXXBO]
+pretty, handsome, charming, pleasant, agreeable, polite; nice, fine, excellent;
+*
+am.o                 V      1 1 PRES ACTIVE  IND 1 S
+amo, amare, amavi, amatus  V (1st)   [XXXAO]
+love, like; fall in love with; be fond of; have a tendency to;
+
+s.um                 V      5 1 PRES ACTIVE  IND 1 S
+sum, esse, fui, futurus  V   [XXXAX]
+be; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL
+
+can.is               N      2 1 LOC P M
+can.is               N      2 1 DAT P M
+can.is               N      2 1 ABL P M
+canus, cani  N (2nd) M   [XBXCO]
+gray hairs (pl.); old age;
+can.is               N      2 2 LOC P N
+can.is               N      2 2 DAT P N
+can.is               N      2 2 ABL P N
+canum, cani  N (2nd) N   [XXXFS]    veryrare
+wicker basket (used for food/flowers and in sacrifices);
+can.is               ADJ    1 1 DAT P X POS
+can.is               ADJ    1 1 ABL P X POS
+canus, cana, canum  ADJ   [XXXBO]
+white, gray; aged, old, wise; hoary; foamy, white-capped; white w/snow/frost;
+can.is               V      3 1 PRES ACTIVE  IND 2 S
+cano, canere, cani, canitus  V (3rd)   [EXXFS]    Later  veryrare
+cano, canere, cecini, cantus  V (3rd)   [XXXAO]
+sing, celebrate, chant; crow; recite; play (music)/sound (horn); foretell;
+can.is               N      3 3 GEN S C
+can.is               N      3 3 ACC P C                   Early
+canes, canis  N (3rd) C   [BAXDO]    Early  lesser
+canis                N      3 3 NOM S C
+canis                N      3 3 VOC S C
+can.is               N      3 3 GEN S C
+can.is               N      3 3 ACC P C                   Early
+canis, canis  N (3rd) C   [XAXAO]
+dog; hound; subordinate; "jackal"; dog-star/fish; lowest dice throw; clamp;
+
+bon.us               N      2 1 NOM S M
+bonus, boni  N (2nd) M   [XXXCO]
+good/moral/honest/brave man; man of honor, gentleman; better/rich people (pl.);
+bon.us               ADJ    1 1 NOM S M POS
+bonus, bona -um, melior -or -us, optimus -a -um  ADJ   [XXXAO]
+good, honest, brave, noble, kind, pleasant, right, useful; valid; healthy;
+
+puer                 N      2 3 NOM S M
+puer                 N      2 3 VOC S M
+puer, pueri  N (2nd) M   [XXXAX]
+boy, lad, young man; servant; (male) child; [a puere => from boyhood];
