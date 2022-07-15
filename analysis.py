@@ -20,48 +20,82 @@ class WordAnalysis():
                 pprint.pprint(words)
         
         while(len(words) != 0): # this should just delineate the three parts of Whitaker output, not put it into the class
+            if(words[0]=="*"):
+                break
             pos = words[0].split(" ")[1]
-
-            if(pos == "ADJ"):
-                currentWord = word.Adjective()
-            elif(pos == "N"):
-                currentWord = word.Noun()
-            elif(pos == "ADV"):
-                currentWord = word.Adverb()
-            elif(pos == "V"):
-                currentWord = word.Verb()
-            elif(pos == "PREP"):
-                currentWord = word.Preposition()
-            else:
-                print("A word was not identified, try again")
-                exit()
-            
-            currentWord.name = self.name
-            if self.que == True:
-                currentWord.que = True
-
             chunk = []
-
-            currentWord.pos = pos # this
+            objects = []
+            dict_entry = ""
+            # if(pos == "ADJ"):
+            #     currentWord = word.Adjective()
+            # elif(pos == "N"):
+            #     currentWord = word.Noun()
+            # elif(pos == "ADV"):
+            #     currentWord = word.Adverb()
+            # elif(pos == "V"):
+            #     currentWord = word.Verb()
+            # elif(pos == "PREP"):
+            #     currentWord = word.Preposition()
+            # else:
+            #     print("A word was not identified, try again")
+            #     exit()
+            
+            
 
             while(not "[" in words[0]):
-                chunk.append(words.pop(0))
-                continue
 
-            if(f == "debug"):
+                chunk.append(words.pop(0))
+
+                if(pos == "ADJ"):
+                    objects.append(word.Adjective())
+                elif(pos == "N"):
+                    objects.append(word.Noun())
+                elif(pos == "ADV"):
+                    objects.append(word.Adverb())
+                elif(pos == "V"):
+                    objects.append(word.Verb())
+                elif(pos == "PREP"):
+                    objects.append(word.Preposition())
+                else:
+                    print("A word was not identified, try again")
+                    exit()
+            
+
+            # while(not ";" in words[0]): # takes the last dictionary entry (why do we do this idk)
+                
+            dict_entry = words.pop(0)
+
+            definition = words.pop(0)
+
+            for i in range(len(objects)):
+                # print(words[0])
+                currentWord = objects[i]
+                currentWord.name = self.name
+                if self.que == True:
+                    currentWord.que = True
+
+                currentWord.dict_entry = dict_entry
+                currentWord.pos = pos # this
+                
+                
+                currentWord.definition = definition
+                currentWord.tags = [x for x in currentWord.dict_entry.split(" ") if ("[" in x)][0][1:-1]
+
+
+                currentWord.process(chunk[i]) # process word-specifics like conjugations vs declensions
+            
+                self.append(currentWord) # add word to the Analysis 
+
+
+            if(f == "debug"): # doesn't work right
                 print("part of speech:", pos)
                 print("chunk:", chunk)
 
-            while(not ";" in words[0]): # takes the last dictionary entry
-                currentWord.dict_entry = words.pop(0)
-                continue
             
-            currentWord.definition = words.pop(0)
-            currentWord.tags = [x for x in currentWord.dict_entry.split(" ") if ("[" in x)][0][1:-1]
 
-            currentWord.process(chunk) # process word-specifics like conjugations vs declensions
-            
-            self.append(currentWord) # add word to the Analysis
+
+            chunk = []
+            objects = []
 
     def append(self, word):
         self.words.append(word)

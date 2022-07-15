@@ -1,6 +1,4 @@
 
-
-from distutils.command.build import build
 from getWhitakers import getWhitakers
 import pprint
 import networkx as nx
@@ -10,33 +8,60 @@ import random
 from heirarchypos import hierarchy_pos
 from copy import copy, deepcopy
 
-def remainingWords(removed, sentence_info): # takes sentence_info object and determines the remaining pool of words
+def remainingWords(removed, sentence_info): # determines the remaining pool of words. removed: list of str | sentence_info: list of WordAnalysis objects
     s = deepcopy(sentence_info)
-    for word in s:
-        if(word[0]["name"] in removed):
-            s.remove(word)
+    for wordanalysis in s:
+        if(wordanalysis.words[0].name in removed):
+            s.remove(wordanalysis)
 
-    return s
+    return s # list of Word objects
 
 
-def canConnect(word, node): # if two word objects can connect
+# def canConnect(word, node): # if two word objects can connect. both word and node are Word objects
 
-    if (word["pos"]=="N" and node["pos"]=="V" or word["pos"]=="V" and node["pos"]=="N"):
-        if(word["number"] == node["number"]): 
-            if(word["pos"] == "N"):
-                if(word["case"] == ["NOM"]):
+#     if (word["pos"]=="N" and node["pos"]=="V" or word["pos"]=="V" and node["pos"]=="N"):
+#         if(word["number"] == node["number"]): 
+#             if(word["pos"] == "N"):
+#                 if(word["case"] == ["NOM"]):
+#                     return True
+                    
+#         if(word["case"] == ["ACC"]):
+#                     return True
+#         # not adding verbs yet
+
+#     # cannot add noun to adj
+#     elif (word["pos"]=="ADJ" and node["pos"] == "N"): # adj to noun
+#         if(word["gender"]==node["gender"] and word["number"]==node["number"] and word["case"]==node["case"]):
+#             return True
+#         pass
+#     elif (word["pos"]=="ADV" and node["pos"] == "V"):
+#         return True
+        
+#         pass
+#     return False
+def canConnect(word, node): # if two word objects can connect. both word and node are Word objects
+
+    if (word.pos=="N" and node.pos=="V" or word.pos=="V" and node.pos=="N"):
+        print(word.number, node.number)
+        if(word.number == node.number):
+            
+            if(word.pos == "N"):
+                print(word.case)
+                if(word.case == "NOM"):
+                    print("nom")
                     return True
                     
-        if(word["case"] == ["ACC"]):
-                    return True
+        if(word.case == "ACC"):
+            print("acc")
+            return True
         # not adding verbs yet
 
     # cannot add noun to adj
-    elif (word["pos"]=="ADJ" and node["pos"] == "N"): # adj to noun
-        if(word["gender"]==node["gender"] and word["number"]==node["number"] and word["case"]==node["case"]):
+    elif (word.pos=="ADJ" and node.pos == "N"): # adj to noun
+        if(word.gender==node.gender and word.number==node.number and word.case==node.case):
             return True
         pass
-    elif (word["pos"]=="ADV" and node["pos"] == "V"):
+    elif (word.pos=="ADV" and node.pos == "V"):
         return True
         
         pass
@@ -47,8 +72,10 @@ sentence_info = []
 
 for word in sentence:
     sentence_info.append(getWhitakers(word))
-# print("SENTENCE INFO")
-# pprint.pprint(sentence_info)
+print("SENTENCE INFO")
+pprint.pprint(sentence_info)
+print(sentence_info[0].words)
+
 # pprint.pprint(getWhitakers("canis"))
 
 # print(remainingWords(["canis"], sentence_info))
@@ -59,11 +86,11 @@ for word in sentence:
 # start with the verb
 
 # verbs
-verbs = [] # list of all verbs
-for word in sentence_info:
+verbs = [] # list of all verbs each verb is a Word object
+for word in sentence_info: # word is object
     # print(type(word))
-    for pos in word:
-        if pos["pos"] == "V":
+    for pos in word.words:
+        if pos.pos == "V":
             verbs.append(pos)
 pprint.pprint(verbs)
 # initialize array of graphs where each verb is the start node
@@ -73,13 +100,12 @@ build_graph = nx.DiGraph()
 build_graph.add_node("root")#, key={"name": "root"})
 for verb in verbs:
     G = nx.Graph()
-    G.add_node(verb["name"], key={"data":verb})#, key={"name": verb}) # start of a sentence graph
+    G.add_node(verb.name, key={"data":verb})#, key={"name": verb}) # start of a sentence graph
     
     
 
-    build_graph.add_node(G, key={"name":verb["name"]}) # add to decision graph
+    build_graph.add_node(G, key={"name":verb.name}) # add to decision graph
     build_graph.add_edge("root", G)
-
 
 # iterate through the sentence pool (and over each verb start) OR maybe the graphs and then iterate through remaining words (iterate through changing list? when to stop?)
 # NEW IDEA make a tree of graphs where each change is a new set of leaves. must recursively iterate through the tree until all are complete at each level k is a graph of size k
@@ -93,22 +119,22 @@ for graph in leaves:
     # print(type([x for x in graph.nodes()][0]))
     print("COOM")
     print([x for x in graph.nodes()])
-    print(remainingWords(['canis'], sentence_info))
-    for wordlist in remainingWords([x for x in graph.nodes()], sentence_info):
+    print(remainingWords([x[1]["key"]["data"].name for x in graph.nodes(data=True)], sentence_info))
+    for wordanalysis in remainingWords([x for x in graph.nodes()], sentence_info):
         # pprint.pprint(remainingWords([x for x in graph.nodes()], sentence_info))
-        print("WORDLIST")
-        pprint.pprint(wordlist)
+        print("WORD ANALYSIS")
+        pprint.pprint(wordanalysis.words)
         # if you find a match, add
         # else delete this graph chain
-        for word in wordlist:
+        for word in wordanalysis.words:
             for node in [x[1]["key"]["data"] for x in graph.nodes(data=True)]:
-                # pprint.pprint(node)
-                # pprint.pprint(word)
+                pprint.pprint(node.name)
+                pprint.pprint(word.name)
                 if(canConnect(word, node)):
                     # make new graph in build_graph with changes
                     newgraph = deepcopy(graph)
-                    newgraph.add_node(word["name"])
-                    newgraph.add_edge(node["name"], word["name"])
+                    newgraph.add_node(word.name)
+                    newgraph.add_edge(node.name, word.name)
 
                     build_graph.add_node(newgraph)
                     build_graph.add_edge(graph, newgraph)

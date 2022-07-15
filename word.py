@@ -26,13 +26,12 @@ class Noun(Word):
         self.number = []
         self.gender = []
     def process(self, word):
-        for item in word:
-            self.forms.append(item.split(" ")[4:7])
+        self.forms = word.split(" ")[4:7]
         # case number gender
-        for form in self.forms:
-            self.case.append(form[0])
-            self.number.append(form[1])
-            self.gender.append(form[2])
+
+        self.case = self.forms[0]
+        self.number = self.forms[1]
+        self.gender = self.forms[2]
     def toString(self):
         return {
             "name": self.name,
@@ -55,15 +54,15 @@ class Adjective(Word):
         self.gender = []
         self.degree = []
     def process(self, word):
-        for item in word:
-            self.forms.append(item.split(" ")[4:8])
+
+        self.forms = word.split(" ")[4:8]
         # print(self.forms)
         # case number gender degree
-        for form in self.forms:
-            self.case.append(form[0])
-            self.number.append(form[1])
-            self.gender.append(form[2])
-            self.degree.append(form[3])
+
+        self.case = self.forms[0]
+        self.number = self.forms[1]
+        self.gender = self.forms[2]
+        self.degree = self.forms[3]
     def toString(self):
         return {
             "name": self.name,
@@ -89,18 +88,17 @@ class Verb(Word):
         self.person = []
         self.number = []
     def process(self, word):
-        
-        for item in word:
-            self.forms.append(item.split(" ")[4:9]) # changed this but maybe not from = to append
+
+        self.forms = word.split(" ")[4:9]
 
         # tense voice mood person number
         # print(self.forms)
-        for form in self.forms:
-            self.tense.append(form[0])
-            self.voice.append(form[1])
-            self.mood.append(form[2])
-            self.person.append(form[3])
-            self.number.append(form[4])
+
+        self.tense = self.forms[0]
+        self.voice = self.forms[1]
+        self.mood = self.forms[2]
+        self.person = self.forms[3]
+        self.number = self.forms[4]
     def toString(self):
         return {
             "name": self.name,
