@@ -101,7 +101,22 @@ class Verb(Word):
             self.mood.append(form[2])
             self.person.append(form[3])
             self.number.append(form[4])
-    
+    def toString(self):
+        return {
+            "name": self.name,
+            "forms": self.forms,
+            "dict_entry": self.dict_entry,
+            "tags": self.tags,
+            "definition": self.definition,
+            "pos": self.pos,
+            "que": self.que,
+            "tense" : self.tense,
+            "voice" : self.voice,
+            "mood" : self.mood,
+            "person" : self.person,
+            "number": self.number
+
+        }
     
 class Adverb(Word):
     def __init__(self):
