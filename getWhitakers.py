@@ -41,7 +41,7 @@ if __name__ == "__main__":
         if(flag=="debug"):
             pprint.pprint(clean(proc))
     
-        pprint.pprint(analyze(w, proc, flag).toString()) # print word analysis cleanly
+        pprint.pprint(analyze(w, proc, flag).words) # print word analysis cleanly
 
 def getWhitakers(word): # function that gets the parsed whitaker's output of a single word
     # proc = subprocess.check_output(f"bin/words {word}", shell=True)
