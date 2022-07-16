@@ -22,6 +22,7 @@ class WordAnalysis():
         while(len(words) != 0): # this should just delineate the three parts of Whitaker output, not put it into the class
             if(words[0]=="*"):
                 break
+            print(words[0])
             pos = words[0].split(" ")[1]
             chunk = []
             objects = []
@@ -64,8 +65,9 @@ class WordAnalysis():
             # while(not ";" in words[0]): # takes the last dictionary entry (why do we do this idk)
                 
             dict_entry = words.pop(0)
-
-            definition = words.pop(0)
+            definition = []
+            while(len(words)>0 and ";" in words[0]):
+                definition.append(words.pop(0))
 
             for i in range(len(objects)):
                 # print(words[0])

@@ -1,7 +1,7 @@
 import networkx as nx
 import random
 
-def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
+def hierarchy_pos(G, root=None, width=3., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
 
     '''
     From Joel's answer at https://stackoverflow.com/a/29597209/2966723.  

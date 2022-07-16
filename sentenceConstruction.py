@@ -1,10 +1,11 @@
 
+
 from getWhitakers import getWhitakers
 import pprint
 import networkx as nx
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_pydot import graphviz_layout
-import random
+
 from heirarchypos import hierarchy_pos
 from copy import copy, deepcopy
 
@@ -45,8 +46,8 @@ def remainingWords(removed, sentence_info): # determines the remaining pool of w
 #         pass
 #     return False
 def canConnect(word, node): # if two word objects can connect. both word and node are Word objects
-
-    if (word.pos=="N" and node.pos=="V" or word.pos=="V" and node.pos=="N"):
+    # returns can connect?, arrow out
+    if (word.pos=="N" and node.pos=="V"):
 
         if(word.number == node.number):
             
@@ -54,25 +55,25 @@ def canConnect(word, node): # if two word objects can connect. both word and nod
                 print(word.case)
                 if(word.case == "NOM"):
 
-                    return True
+                    return [True, True]
                     
         if(word.case == "ACC"):
 
-            return True
+            return [True, False]
         # not adding verbs yet
 
     # cannot add noun to adj
     elif (word.pos=="ADJ" and node.pos == "N"): # adj to noun
         if(word.gender==node.gender and word.number==node.number and word.case==node.case):
-            return True
+            return [True]
         pass
     elif (word.pos=="ADV" and node.pos == "V"):
-        return True
+        return [True]
         
         pass
-    return False
+    return [False]
 
-def printGraph(graph, root):
+def printGraph(graph, root, path):
     # print(build_graph.nodes())
     if(root==None):
         nx.draw(graph, with_labels=True)
@@ -81,7 +82,8 @@ def printGraph(graph, root):
         # pos = hierarchy_pos(graph, root)
         nx.draw(graph,with_labels=True)
         plt.show()
-        plt.savefig("image.png")
+        plt.savefig(path, dpi=1200)
+        
 
 sentence = input().split(" ") # manual sentence input
 sentence_info = []
@@ -117,7 +119,7 @@ depth = 0
 build_graph = nx.DiGraph()
 build_graph.add_node("root", key={"name": "root", "depth":depth})
 for verb in verbs:
-    G = nx.Graph()
+    G = nx.DiGraph()
     G.add_node(verb.name, key={"data":verb})#, key={"name": verb}) # start of a sentence graph
     
     
@@ -138,42 +140,32 @@ while(depth < len(sentence_info)):
     for graph in leaves:
         
         if(isinstance(graph, int)):
-            # give a child
+            # give a blank child
             build_graph.add_node(blanks, key={"data":"zoinks", "depth": depth})
             build_graph.add_edge(graph, blanks)
             blanks+=1
-            # depth = nx.shortest_path_length(build_graph,"root")
-            # depth = max(depth.values())
             continue
-        # print(graph)
-        # print(type([x for x in graph.nodes()][0]))
-        print("COOM")
-        print([x for x in graph.nodes()])
-        
-        # print([x[1] for x in graph.nodes(data=True)])
-        print([x.words[0].name for x in remainingWords([x for x in graph.nodes()], sentence_info)])
 
         for wordanalysis in remainingWords([x for x in graph.nodes()], sentence_info): # pool of words to iterate over
-            # pprint.pprint(remainingWords([x for x in graph.nodes()], sentence_info))
-            print("WORD ANALYSIS")
-            pprint.pprint(wordanalysis.words)
             # if you find a match, add
             # else delete this graph chain
-            for word in wordanalysis.words: # each part of speech in a wordanalysis
+            for word in wordanalysis.words: # each different word in a wordanalysis
                 
                 print([x[1] for x in graph.nodes(data=True)])
                 
-                for node in [x[1]["key"]["data"] for x in graph.nodes(data=True)]: # each node is a wordanalysis carried in the data of each node
+                for node in [x[1]["key"]["data"] for x in graph.nodes(data=True)]: # var:node is a wordanalysis carried in the data of each node in graph
                     pprint.pprint(node.name)
                     pprint.pprint(word.name)
-                    if(canConnect(word, node)):
-                        # make new graph in build_graph with changes
-                        print("NEWGRAPH")
+                    if(canConnect(word, node)[0]):
+                        #connect new graph in build_graph with changes
+                        # should be subject -> verb -> object
                         newgraph = deepcopy(graph)
                         
                         newgraph.add_node(word.name , key={"data":word})
-                        newgraph.add_edge(node.name, word.name)
-
+                        if(not canConnect(word, node)[1]):
+                            newgraph.add_edge(node.name, word.name)
+                        else:
+                            newgraph.add_edge(word.name, node.name)
                         build_graph.add_node(newgraph, key={"name":verb.name, "depth":depth})
                         build_graph.add_edge(graph, newgraph)
 
@@ -185,8 +177,6 @@ while(depth < len(sentence_info)):
                     else:
                         # cannot create a graph in this configuration, abandon this line
                         
-
-                        print("made blanks")
                         build_graph.add_node(blanks, key={"depth":depth})
                         build_graph.add_edge(graph, blanks)
                         blanks+=1
@@ -197,21 +187,67 @@ while(depth < len(sentence_info)):
     depth = max(depth.values())
 
 
+
+
 # print(build_graph.nodes())
 # pos = hierarchy_pos(build_graph, "root")
-# nx.draw(build_graph, pos, with_labels=True)
+# nx.draw(build_graph, pos,with_labels=True)
 # plt.savefig("image.png")
-
-print(build_graph.nodes())
-pos = hierarchy_pos(build_graph, "root")
-nx.draw(build_graph, pos,with_labels=True)
-plt.savefig("image.png")
 
 # decide possible insertion locations based on metadata
 
 # if there is multiple places where it could go, make copies of the graph
 # if there are no places for it to go, delete the graph.
+
+
+
+
+
 print(depth)
 subgraph = [x for x,y in build_graph.nodes(data=True) if y["key"]["depth"]==depth-1]
-print(subgraph[0])
-printGraph(subgraph[0], False)
+print(subgraph)
+# printGraph(subgraph[2], False, "image2.png")
+# printGraph(subgraph[4], False, "image2.png")
+
+final = nx.DiGraph()
+identifier = 0
+graphlist = []
+print(subgraph)
+for graph in subgraph:
+    if(not isinstance(graph, int)):
+        print("this should print twice")
+        if(len(graphlist)==0):
+                
+                print("first graph", final, graph)
+                graph = nx.relabel_nodes(graph, lambda x: str(identifier)+x)
+                graphlist.append(graph)
+                # final = nx.disjoint_union(final, graph)
+                final.add_nodes_from(graph.nodes())
+                final.add_edges_from(graph.edges())
+
+
+                identifier += 1
+                continue
+        for ref in graphlist:
+            print(final.nodes(), graph.nodes())
+            print([u[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)])
+            print([v[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)])
+
+            # printGraph(ref, False, "image3.png")
+            # printGraph(graph, False, "image3.png")
+            if [x[0][len(str(identifier))-1:] for x in graph.nodes(data=True)]!=[x[0][len(str(identifier))-1:] for x in ref.nodes(data=True)] or not [u[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)]==[u for u,v,a in graph.edges(data=True)] or not [v[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)]==[v for u,v,a in graph.edges(data=True)]:
+                print(graph.nodes(), ref.nodes(), [x[0] for x in graph.nodes(data=True)]==[x[0] for x in ref.nodes(data=True)])
+                
+                print(final, graph)
+                graph = nx.relabel_nodes(graph, lambda x: str(identifier)+x)
+                graphlist.append(graph)
+                # print(final.nodes(), graph.nodes())
+                # exit()
+                final.add_nodes_from(graph.nodes())
+                final.add_edges_from(graph.edges())
+
+                print(final.nodes(), graph.nodes())
+                identifier += 1
+printGraph(final, False, "image3.png")
+nx.write_gexf(final, "graph.gexf")
+        

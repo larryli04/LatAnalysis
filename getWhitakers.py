@@ -10,16 +10,23 @@ import analysis
 def clean(word):
 
     word = word.decode("utf-8") 
-    word = word.replace("\\n", "\n")
-    word = word.replace("\\r", "")
+    # print(word)
+    # word = word.replace("\\n", "\n")
+
+    word = word.replace("\r", "")
+
     word = word.replace("\\", "")
+
     word = word.rstrip("\n")
+
     list = [' '.join(x.split()) for x in word.split("\n")]
+    # print(list)
 
     return list
 
 def analyze(word,wordput, f): # gives a word analysis of a singular word
     x = analysis.WordAnalysis(word, clean(wordput), f)
+
     # return x.toString()
     return x
 
