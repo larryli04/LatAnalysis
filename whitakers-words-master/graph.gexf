@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2022-07-16">
+    <creator>NetworkX 2.8.4</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="0sunt" label="0sunt" />
+      <node id="0corpora" label="0corpora" />
+      <node id="1sunt" label="1sunt" />
+      <node id="1corpora" label="1corpora" />
+    </nodes>
+    <edges>
+      <edge source="0corpora" target="0sunt" id="0" />
+      <edge source="1sunt" target="1corpora" id="1" />
+    </edges>
+  </graph>
+</gexf>

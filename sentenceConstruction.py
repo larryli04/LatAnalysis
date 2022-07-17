@@ -187,67 +187,47 @@ while(depth < len(sentence_info)):
     depth = max(depth.values())
 
 
-
+# save build_graph as image.png
 
 # print(build_graph.nodes())
 # pos = hierarchy_pos(build_graph, "root")
 # nx.draw(build_graph, pos,with_labels=True)
 # plt.savefig("image.png")
 
-# decide possible insertion locations based on metadata
-
-# if there is multiple places where it could go, make copies of the graph
-# if there are no places for it to go, delete the graph.
-
-
-
-
 
 print(depth)
 subgraph = [x for x,y in build_graph.nodes(data=True) if y["key"]["depth"]==depth-1]
 print(subgraph)
-# printGraph(subgraph[2], False, "image2.png")
-# printGraph(subgraph[4], False, "image2.png")
 
-final = nx.DiGraph()
-identifier = 0
-graphlist = []
-print(subgraph)
+
+graphlist = [] # cut down the total number of graphs to unique ones
 for graph in subgraph:
     if(not isinstance(graph, int)):
-        print("this should print twice")
+        print("how")
         if(len(graphlist)==0):
-                
-                print("first graph", final, graph)
-                graph = nx.relabel_nodes(graph, lambda x: str(identifier)+x)
-                graphlist.append(graph)
-                # final = nx.disjoint_union(final, graph)
-                final.add_nodes_from(graph.nodes())
-                final.add_edges_from(graph.edges())
-
-
-                identifier += 1
-                continue
+            print(1)
+            nx.draw(graph, with_labels=True)
+            graphlist.append(graph)
+            continue
+        f = True
         for ref in graphlist:
-            print(final.nodes(), graph.nodes())
-            print([u[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)])
-            print([v[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)])
 
-            # printGraph(ref, False, "image3.png")
-            # printGraph(graph, False, "image3.png")
-            if [x[0][len(str(identifier))-1:] for x in graph.nodes(data=True)]!=[x[0][len(str(identifier))-1:] for x in ref.nodes(data=True)] or not [u[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)]==[u for u,v,a in graph.edges(data=True)] or not [v[len(str(identifier))-1:] for u,v,a in ref.edges(data=True)]==[v for u,v,a in graph.edges(data=True)]:
-                print(graph.nodes(), ref.nodes(), [x[0] for x in graph.nodes(data=True)]==[x[0] for x in ref.nodes(data=True)])
+
+            if [x[0] for x in sorted([x for x in graph.nodes(data=True)])]==[x[0] for x in sorted([x for x in ref.nodes(data=True)])] and (sorted([[u,v] for u,v,a in sorted([x for x in ref.edges(data=True)])])==sorted([[u,v] for u,v,a in sorted([x for x in graph.edges(data=True)])])):
+                f = False
+
                 
-                print(final, graph)
-                graph = nx.relabel_nodes(graph, lambda x: str(identifier)+x)
-                graphlist.append(graph)
-                # print(final.nodes(), graph.nodes())
-                # exit()
-                final.add_nodes_from(graph.nodes())
-                final.add_edges_from(graph.edges())
+        if(f):
+            # debug info
+            # print([x[0] for x in sorted([x for x in graph.nodes(data=True)])],[x[0] for x in sorted([x for x in ref.nodes(data=True)])], [u for u,v in sorted([x for x in ref.nodes(data=True)])]!=[u for u,v in sorted([x for x in graph.nodes(data=True)])])
+            # print(sorted([[u,v] for u,v,a in sorted([x for x in ref.edges(data=True)])]),sorted([[u,v] for u,v,a in sorted([x for x in graph.edges(data=True)])]), (sorted([[u,v] for u,v,a in sorted([x for x in ref.edges(data=True)])])!=sorted([[u,v] for u,v,a in sorted([x for x in graph.edges(data=True)])])))
+            
+            nx.draw(graph, with_labels=True)
+            graphlist.append(graph)
+            
 
-                print(final.nodes(), graph.nodes())
-                identifier += 1
-printGraph(final, False, "image3.png")
-nx.write_gexf(final, "graph.gexf")
+                
+plt.show()
+plt.savefig("image3.png", dpi=1200)
+# nx.write_gexf(final, "graph.gexf")
         
