@@ -22,7 +22,7 @@ class WordAnalysis():
         while(len(words) != 0): # this should just delineate the three parts of Whitaker output, not put it into the class
             if(words[0]=="*"):
                 break
-            print(words[0])
+
             pos = words[0].split(" ")[1]
             chunk = []
             objects = []
@@ -57,6 +57,8 @@ class WordAnalysis():
                     objects.append(word.Verb())
                 elif(pos == "PREP"):
                     objects.append(word.Preposition())
+                elif(pos == "PRON"):
+                    objects.append(word.Noun())
                 else:
                     print("A word was not identified, try again")
                     exit()
@@ -108,7 +110,7 @@ class WordAnalysis():
     def getVerbTenses(self): # common data point for deciding sentence structure
         ans = []
         for word in self.words:
-            print(word.pos)
+
             if word.pos == "V":
                 ans.append(word.tense)
         return ans
@@ -116,7 +118,7 @@ class WordAnalysis():
     def getNounCases(self): # common data point for deciding sentence structure
         ans = []
         for word in self.words:
-            print(word.pos)
+
             if word.pos == "N":
                 ans.append(word.case)
         return ans

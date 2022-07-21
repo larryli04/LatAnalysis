@@ -46,6 +46,21 @@ class Noun(Word):
             "gender": self.gender
         }
 
+class Pronoun(Word):
+    def __init__(self):
+        Word.__init__(self)
+        self.case = []
+        self.number = []
+        self.gender = []
+    def process(self, word):
+        self.forms = word.split(" ")[4:7]
+        # case number gender
+
+        self.case = self.forms[0]
+        self.number = self.forms[1]
+        self.gender = self.forms[2] # probably C
+    
+
 class Adjective(Word):
     def __init__(self):
         Word.__init__(self)
@@ -121,21 +136,21 @@ class Adverb(Word):
         Word.__init__(self)
         self.degree = []
     def process(self, word):
-        for item in word:
-            self.forms.append(item.split(" ")[2])
+
+        self.forms = word.split(" ")[2]
         # degree
         # print(self.forms)
-        for form in self.forms:
-            self.degree.append(form[0])
+        
+        self.degree = self.forms[0]
 
 class Preposition(Word):
     def __init__(self):
         Word.__init__(self)
         self.plus = []
     def process(self, word):
-        for item in word:
-            self.forms.append(item.split(" ")[2])
+
+        self.forms = word.split(" ")[2]
         # the thing that it takes
         # print(self.forms)
-        for form in self.forms:
-            self.plus.append(form[0])
+
+        self.plus = self.forms[0]
