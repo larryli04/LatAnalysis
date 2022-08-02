@@ -8,10 +8,10 @@ from copy import copy, deepcopy
 def printDecisionGraph(): # save build_graph as image.png
     
     pos = hierarchy_pos(build_graph, "root")
-    labels = nx.get_node_attributes(build_graph, 'key')
+    labels = {key: (value["new"],value["delete"]) for (key, value) in nx.get_node_attributes(build_graph, 'key').items()}
     # print(labels)
-    nx.draw(build_graph, pos, font_size = 2,labels = labels)
-    plt.savefig("images/direction.png", dpi=800)
+    nx.draw(build_graph, pos, font_size = 1, node_size = 3,labels = labels)
+    plt.savefig("images/direction.png", dpi=1000)
 
 def remainingWords(removed, sentence_info): # determines the remaining pool of words. removed: list of str | sentence_info: list of WordAnalysis objects
     s = deepcopy(sentence_info)
@@ -126,13 +126,13 @@ def getVerbs(sentence_info): # get verbs from sentence_info
 
 def initTree(verbs): # create Tree of graphs with a verb as the starting point
     build_graph = nx.DiGraph() # initialize graph of graphs where each verb is the start node
-    build_graph.add_node("root", key={"name": "root", "depth":0, "delete": None})
+    build_graph.add_node("root", key={"name": "root", "depth":0, "delete": None, "new":"root"})
 
     for verb in verbs:
         G = nx.DiGraph() # start of a sentence graph
         G.add_node(verb.name, key={"data":verb}) 
 
-        build_graph.add_node(G, key={"name":verb.name, "depth":0, "delete": None}) # add to larger graph graph
+        build_graph.add_node(G, key={"name":verb.name, "depth":0, "delete": None, "new":verb.name}) # add to larger graph graph
         build_graph.add_edge("root", G)
     return build_graph
 
@@ -175,15 +175,15 @@ def genTree(large_graph, sentence_in): # populate the rest of the tree according
                             if(canConnect(word, graphnode, graph)[3]!=None):
                                 delete = canConnect(word, graphnode, graph)[3]
 
-
-                            build_graph.add_node(newgraph, key={"depth":depth, "delete":delete}) # add to larger graph
+                            build_graph.add_node(newgraph, key={"depth":depth, "delete":delete, "new":word.name}) # add to larger graph
                             build_graph.add_edge(graph, newgraph, dir = blank)
 
                             if(canConnect(word, graphnode, graph)[1]=="both"):
-                                build_graph.add_node(newgraph2, key={"depth":depth, "delete":delete}) # add to larger graph
+                                print("double")
+                                build_graph.add_node(newgraph2, key={"depth":depth, "delete":delete, "new":word.name}) # add to larger graph
                                 build_graph.add_edge(graph, newgraph2, dir = blank)
 
-
+                            delete = lgraph[1]["key"]["delete"]
                             blank += 1
                             
                         else:
@@ -228,7 +228,6 @@ def cutTree(subgraph): # get rid of duplicate leaves
                         if nx.get_edge_attributes(ref,"rel") == nx.get_edge_attributes(graph, "rel"):
                             f = False
 
-            # print(f)
             if(f):
                 pos = nx.planar_layout(graph)
                 nx.draw(graph, pos=pos, with_labels=True)
@@ -239,12 +238,27 @@ def cutTree(subgraph): # get rid of duplicate leaves
                 n+=1
                 graphlist.append(graph)
                 
-    print("hello")
+    print(n, "images saved")
     plt.savefig("images/all.png", dpi=1200)
+
     return graphlist
 
-sentence = input().split(" ") # manual sentence input
+in_sentence = input().split(" ") # manual sentence input
 sentence_info = []
+sentence = []
+
+sub_pool = {
+    "a":"ab",
+    "e":"ex"
+}
+for word in in_sentence:
+    for key in sub_pool.keys():
+        if word == key:
+            sentence.append(sub_pool[key])
+            break
+        else:
+            sentence.append(word)
+            break
 
 for word in sentence: # create sentence_info
     sentence_info.append(getWhitakers(word))
