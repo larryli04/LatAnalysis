@@ -27,20 +27,6 @@ class WordAnalysis():
             chunk = []
             objects = []
             dict_entry = ""
-            # if(pos == "ADJ"):
-            #     currentWord = word.Adjective()
-            # elif(pos == "N"):
-            #     currentWord = word.Noun()
-            # elif(pos == "ADV"):
-            #     currentWord = word.Adverb()
-            # elif(pos == "V"):
-            #     currentWord = word.Verb()
-            # elif(pos == "PREP"):
-            #     currentWord = word.Preposition()
-            # else:
-            #     print("A word was not identified, try again")
-            #     exit()
-            
             
 
             while(not "[" in words[0]):
@@ -59,6 +45,8 @@ class WordAnalysis():
                     objects.append(word.Preposition())
                 elif(pos == "PRON"):
                     objects.append(word.Noun())
+                elif(pos == "VPAR"):
+                    objects.append(word.Participle())
                 else:
                     print("A word was not identified, try again")
                     exit()
@@ -107,7 +95,7 @@ class WordAnalysis():
     def toString(self):
         return [x.toString() for x in self.words] # doesn't include every data point in object
 
-    def getVerbTenses(self): # common data point for deciding sentence structure
+    def getVerbTenses(self): # common data point for deciding sentence structure OLD
         ans = []
         for word in self.words:
 
@@ -115,7 +103,7 @@ class WordAnalysis():
                 ans.append(word.tense)
         return ans
     
-    def getNounCases(self): # common data point for deciding sentence structure
+    def getNounCases(self): # common data point for deciding sentence structure OLD
         ans = []
         for word in self.words:
 

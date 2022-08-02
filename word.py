@@ -96,24 +96,100 @@ class Adjective(Word):
 class Verb(Word):
     def __init__(self):
         Word.__init__(self)
-        
+        self.inf = False
         self.tense = []
-        self.voice = []
-        self.mood = []
-        self.person = []
-        self.number = []
+       
     def process(self, word):
 
         self.forms = word.split(" ")[4:9]
 
         # tense voice mood person number
-        # print(self.forms)
-
+        
+        
         self.tense = self.forms[0]
-        self.voice = self.forms[1]
-        self.mood = self.forms[2]
-        self.person = self.forms[3]
-        self.number = self.forms[4]
+
+        if(self.forms[2] == "INF"): # infinitive
+            self.voice = self.forms[1]
+            self.mood = self.forms[2]
+            self.person = self.forms[3]
+            self.number = self.forms[4]
+        elif(len(self.forms) == 5): # regular verb
+            self.voice = self.forms[1]
+            self.mood = self.forms[2]
+            self.person = self.forms[3]
+            self.number = self.forms[4]
+        
+        elif(len(self.forms) == 4): # deponent
+            self.voice = "ACTIVE"
+            self.mood = self.forms[1]
+            self.person = self.forms[2]
+            self.number = self.forms[3]
+        else:
+            print("parsing the verbs went wrong")
+        
+    def toString(self):
+        if (self.forms[2] == "INF"):
+            return {
+                "name": self.name,
+                "forms": self.forms,
+                "dict_entry": self.dict_entry,
+                "tags": self.tags,
+                "definition": self.definition,
+                "pos": self.pos,
+                "que": self.que,
+                "tense" : self.tense,
+                "voice" : self.voice,
+                "inf" : True
+
+            }
+        else:
+            return {
+                "name": self.name,
+                "forms": self.forms,
+                "dict_entry": self.dict_entry,
+                "tags": self.tags,
+                "definition": self.definition,
+                "pos": self.pos,
+                "que": self.que,
+                "tense" : self.tense,
+                "voice" : self.voice,
+                "mood" : self.mood,
+                "person" : self.person,
+                "number": self.number
+
+            }
+    
+class Participle(Word):
+    def __init__(self):
+        Word.__init__(self)
+        
+        self.tense = []
+        self.voice = []
+        self.person = []
+        self.number = []
+        self.gender = []
+        self.case = []
+
+    def process(self, word):
+
+        self.forms = word.split(" ")[4:9]
+
+        # tense voice mood person number
+        print(self.forms)
+        self.case = self.forms[0]
+        self.number = self.forms[1]
+        self.gender = self.forms[2]
+        self.tense = self.forms[3]
+        
+
+        if(len(self.forms) == 5):
+            self.voice = self.forms[4]
+        
+        elif(len(self.forms) == 4):
+            self.voice = "ACTIVE"
+        else:
+            print("parsing the participle went wrong")
+
     def toString(self):
         return {
             "name": self.name,
@@ -125,7 +201,6 @@ class Verb(Word):
             "que": self.que,
             "tense" : self.tense,
             "voice" : self.voice,
-            "mood" : self.mood,
             "person" : self.person,
             "number": self.number
 
@@ -153,4 +228,7 @@ class Preposition(Word):
         # the thing that it takes
         # print(self.forms)
 
-        self.plus = self.forms[0]
+        self.plus = self.forms
+
+
+        

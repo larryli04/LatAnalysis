@@ -31,24 +31,32 @@ def analyze(word,wordput, f): # gives a word analysis of a singular word
     return x
 
 if __name__ == "__main__":
-    print(sys.argv)
-    if ("--" in sys.argv[1]):
-        flag = str(sys.argv[1])[2:]
-        words = sys.argv[2:]
-    else:
-        flag = None
-        words = sys.argv[1:]
+    w = sys.argv[1]
 
-    print(words)
-    original = " ".join(words)
+    p = subprocess.Popen(["bin/words",f"{w}"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    proc = []
+    pline = p.stdout.readline()
 
-    for w in words:
-        proc = subprocess.check_output(f"bin/words {w}", shell=True)
+    while(len(pline) != 0):
+        if(pline == b"*\n"):
+            break
+        proc.append(pline)
+
+        pline = p.stdout.readline()
+
+        if(b"MORE - hit RETURN/ENTER to continue" in pline):
+
+            p.stdin.write('\n'.encode('utf-8'))
+            p.stdin.flush() # i don't know what this does but it makes stdin work
+            pline = p.stdout.readline()
+        if(b'Syncope' in pline):
+            pline = p.stdout.readline()
+            pline = p.stdout.readline()
         
-        if(flag=="debug"):
-            pprint.pprint(clean(proc))
     
-        pprint.pprint(analyze(w, proc, flag).words) # print word analysis cleanly
+    proc = b"".join(proc)
+    pprint.pprint(clean(proc))
+    pprint.pprint(analyze(w, proc, None).toString()) # print word analysis cleanly
 
 def getWhitakers(word): # function that gets the parsed whitaker's output of a single word
     # proc = subprocess.check_output(f"bin/words {word}", shell=True)
@@ -67,6 +75,9 @@ def getWhitakers(word): # function that gets the parsed whitaker's output of a s
 
             p.stdin.write('\n'.encode('utf-8'))
             p.stdin.flush() # i don't know what this does but it makes stdin work
+            pline = p.stdout.readline()
+        if(b'Syncope' in pline):
+            pline = p.stdout.readline()
             pline = p.stdout.readline()
         
     
