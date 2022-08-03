@@ -1,3 +1,4 @@
+from distutils.command.build import build
 from getWhitakers import getWhitakers
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -146,6 +147,11 @@ def genTree(large_graph, sentence_in): # populate the rest of the tree according
         
         leaves = [x for x in build_graph.nodes(data=True) if build_graph.out_degree(x[0])==0 and build_graph.in_degree(x[0])==1 and x[1]["key"]["depth"] == depth-1] # define most recent graphs
 
+        # if depth is not the verb only, then remove duplicates
+        if(depth > 1):
+            leaves = cutTree(leaves, False)
+
+
         for lgraph in leaves:
             graph = lgraph[0]
             delete = lgraph[1]["key"]["delete"]
@@ -195,12 +201,13 @@ def genTree(large_graph, sentence_in): # populate the rest of the tree according
     
     
     print("Depth of build_graph: ",depth)
-    subgraphs = [x for x,y in build_graph.nodes(data=True) if y["key"]["depth"]==depth-1 and (y["key"]["delete"]==False or y["key"]["delete"]==None)] # all graphs at lowest level
+    print(build_graph.number_of_nodes(), "nodes")
+    subgraphs = [x for x in build_graph.nodes(data=True) if x[1]["key"]["depth"]==depth-1 and (x[1]["key"]["delete"]==False or x[1]["key"]["delete"]==None)] # all graphs at lowest level
     
 
     return subgraphs
 
-def cutTree(subgraph): # get rid of duplicate leaves
+def cutTree(subgraph, pr): # get rid of duplicate leaves
     graphlist = [] # cut down the total number of graphs to unique ones
     n=1
     for graph in subgraph:
@@ -209,37 +216,40 @@ def cutTree(subgraph): # get rid of duplicate leaves
             f = True # bool if graph should be added to graphlist
 
             if(len(graphlist)==0): # adds first value to graphlist
-                pos = nx.planar_layout(graph)
-                nx.draw(graph, pos=pos, with_labels=True)
-
-                edge_labels = nx.get_edge_attributes(graph, "rel")
-                nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels, label_pos=.5)
-                plt.savefig(f"images/image{n}.png", dpi=1200)
-                plt.clf()
-                n+=1
+                if(pr):
+                    pos = nx.planar_layout(graph[0])
+                    nx.draw(graph[0], pos=pos, with_labels=True)
+                    edge_labels = nx.get_edge_attributes(graph[0], "rel")
+                    nx.draw_networkx_edge_labels(graph[0], pos, edge_labels = edge_labels, label_pos=.5)
+                    plt.savefig(f"images/image{n}.png", dpi=1200)
+                    plt.clf()
+                    n+=1
                 graphlist.append(graph)
                 continue # go to next graph
             
             for ref in graphlist:
 
                 # if a graph is the same as one already in graph list, do not add it to the loop
-                if [x[0] for x in sorted([x for x in graph.nodes(data=True)])]==[x[0] for x in sorted([x for x in ref.nodes(data=True)])]:
-                    if (sorted([[u,v] for u,v,a in sorted([x for x in ref.edges(data=True)])])==sorted([[u,v] for u,v,a in sorted([x for x in graph.edges(data=True)])])):
-                        if nx.get_edge_attributes(ref,"rel") == nx.get_edge_attributes(graph, "rel"):
+                if [x[0] for x in sorted([x for x in graph[0].nodes(data=True)])]==[x[0] for x in sorted([x for x in ref[0].nodes(data=True)])]:
+                    if (sorted([[u,v] for u,v,a in sorted([x for x in ref[0].edges(data=True)])])==sorted([[u,v] for u,v,a in sorted([x for x in graph[0].edges(data=True)])])):
+                        if nx.get_edge_attributes(ref[0],"rel") == nx.get_edge_attributes(graph[0], "rel"):
                             f = False
 
             if(f):
-                pos = nx.planar_layout(graph)
-                nx.draw(graph, pos=pos, with_labels=True)
-                edge_labels = nx.get_edge_attributes(graph, "rel")
-                nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels, label_pos=.5)
-                plt.savefig(f"images/image{n}.png", dpi=1200)
-                plt.clf()
-                n+=1
+                if(pr):
+                    pos = nx.planar_layout(graph[0])
+                    nx.draw(graph[0], pos=pos, with_labels=True)
+                    edge_labels = nx.get_edge_attributes(graph[0], "rel")
+                    nx.draw_networkx_edge_labels(graph[0], pos, edge_labels = edge_labels, label_pos=.5)
+                    plt.savefig(f"images/image{n}.png", dpi=1200)
+                    plt.clf()
+                    n+=1
                 graphlist.append(graph)
                 
-    print(n, "images saved")
-    plt.savefig("images/all.png", dpi=1200)
+    
+    if(pr):
+        print(n-1, "images saved")
+
 
     return graphlist
 
@@ -270,7 +280,7 @@ build_graph = initTree(verbs)
 
 subgraphs = genTree(build_graph, sentence_info)
 
-possibilities = cutTree(subgraphs)
+possibilities = cutTree(subgraphs, True)
 
-printDecisionGraph()
+# printDecisionGraph()
 # nx.write_gexf(final, "graph.gexf")
